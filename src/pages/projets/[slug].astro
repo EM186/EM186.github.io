@@ -1,0 +1,130 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Doodle from '../../components/Doodle.astro';
+import { projects } from '../../data/fr';
+import type { Project } from '../../data/types';
+import { t } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { p, prev: projects[(i - 1 + projects.length) % projects.length], next: projects[(i + 1) % projects.length] },
+  }));
+}
+interface Props { p: Project; prev: Project; next: Project }
+const { p, prev, next } = Astro.props;
+const folderColor: Record<string, string> = {
+  sky: 'var(--f-sky)', mint: 'var(--f-matcha)', butter: 'var(--f-ochre)', lilac: 'var(--f-lilac)', rose: 'var(--f-terracotta)',
+};
+const shots = [...(p.cover ? [p.cover] : []), ...p.gallery];
+const allPhones = shots.length > 0 && shots.every((g) => g.phone);
+---
+<Base title={`${p.title} · Emma Zhao`} description={p.summary} home={false} image={p.cover?.src}>
+  <article class="project wrap" style={`--f:${folderColor[p.tone]}`}>
+    <nav class="crumbs mono" aria-label="Fil d'Ariane">
+      <a class="tlink" href="/#projets"><Icon name="back" size={14} />Projets</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{p.title}</span>
+    </nav>
+
+    <header class="phero">
+      <span class="phero__tab" aria-hidden="true"></span>
+      <div class="phero__inner">
+        <p class="mono phero__frame">{p.frame}</p>
+        <h1 class="phero__title"><span class="line"><span>{p.title}</span></span></h1>
+        <p class="phero__tagline">{p.tagline}</p>
+        <div class="phero__links">
+          {p.github && (
+            <a class="btn btn--fill" href={p.github} target="_blank" rel="noopener"><Icon name="github" size={16} />{t('cta.github')}</a>
+          )}
+          {p.docs.map((d) => (
+            <a class="btn" href={d.href} download><Icon name="download" size={16} />{d.label} · {d.lang}{d.size ? ` · ${d.size}` : ''}</a>
+          ))}
+          {/* Doc anglaise : décommenter la ligne EN dans `docs` (src/data/fr.ts) et supprimer ce bouton */}
+          {p.docs.length > 0 && p.slug.startsWith('pharma') && (
+            <span class="btn btn--soon" aria-disabled="true"><Icon name="file" size={16} />English version · coming soon</span>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <dl class="meta mono" data-reveal>
+      <div><dt>Type</dt><dd>{p.kind}</dd></div>
+      <div><dt>Année</dt><dd>{p.year}</dd></div>
+      <div><dt>Équipe</dt><dd>{p.team}</dd></div>
+      <div><dt>Rôle</dt><dd>{p.role}</dd></div>
+      <div class="meta__wide"><dt>Stack</dt><dd>{p.stack.join(' / ')}</dd></div>
+    </dl>
+
+    <div class="pbody">
+      <div class="pbody__main">
+        <section data-reveal>
+          <h2 class="pbody__h"><span class="mono">a.</span> Le contexte</h2>
+          {p.context.map((c) => <p>{c}</p>)}
+        </section>
+
+        <section data-reveal>
+          <h2 class="pbody__h"><span class="mono">b.</span> Ce que j’ai fait</h2>
+          <ol class="did">
+            {p.did.map((d, i) => <li><span class="mono">{String(i + 1).padStart(2, '0')}</span>{d}</li>)}
+          </ol>
+        </section>
+
+        <section data-reveal>
+          <h2 class="pbody__h"><span class="mono">c.</span> Les points techniques</h2>
+          <div class="hl">
+            {p.highlights.map((h, i) => (
+              <section class="hl__note" style={`--r:${[-1.5, 1.2, -0.8][i % 3]}deg`}>
+                <h3>{h.title}</h3>
+                <p>{h.text}</p>
+              </section>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <aside class="pbody__side" data-reveal>
+        <div class="memo">
+          <span class="memo__pin" aria-hidden="true"></span>
+          <p class="mono memo__k">ce que j’en retiens</p>
+          <ul>{p.learned.map((l) => <li class="hand">{l}</li>)}</ul>
+          {p.note && <p class="mono memo__note">* {p.note}</p>}
+        </div>
+        <p class="mono side__k">domaines</p>
+        <ul class="side__pills">{p.domains.map((d) => <li class="pill" style="--p:var(--f)">{d}</li>)}</ul>
+      </aside>
+    </div>
+
+    <section class="gallery" aria-label="Captures d'écran">
+      <h2 class="pbody__h" data-reveal><span class="mono">d.</span> En images</h2>
+      {shots.length === 0 ? (
+        /* Placeholder : ajouter des captures dans public/images/<slug>/ puis les déclarer dans `gallery` */
+        <div class="ph" data-reveal>
+          <Doodle name="star" size={40} />
+          <span class="mono">{p.placeholder ?? 'captures à venir'}</span>
+        </div>
+      ) : (
+        <ul class:list={['gallery__grid', { 'gallery__grid--phones': allPhones }]}>
+          {shots.map((g, i) => (
+            <li data-reveal style={`--d:${(i % 3) * 80}ms`}>
+              <figure class:list={['fig', { 'fig--phone': g.phone }]}>
+                <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
+                <figcaption class="mono">fig. {String(i + 1).padStart(2, '0')} · {g.caption}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <nav class="pnav" aria-label="Autres projets">
+      <a class="pnav__link" href={`/projets/${prev.slug}/`} style={`--f:${folderColor[prev.tone]}`}>
+        <span class="mono">← précédent</span><span class="pnav__t">{prev.title}</span>
+      </a>
+      <a class="pnav__link pnav__link--next" href={`/projets/${next.slug}/`} style={`--f:${folderColor[next.tone]}`}>
+        <span class="mono">suivant →</span><span class="pnav__t">{next.title}</span>
+      </a>
+    </nav>
+  </article>
+</Base>

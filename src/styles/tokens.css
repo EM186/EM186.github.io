@@ -1,0 +1,81 @@
+/* =========================================================
+   Design tokens : tout le visuel passe par ces variables.
+   Pour un nouveau thème : dupliquer le bloc [data-theme="..."]
+   et ne changer que les valeurs.
+   ========================================================= */
+
+:root,
+:root[data-theme="creme"] {
+  color-scheme: light;
+
+  /* Papier & encre */
+  --paper: #fbf5e6;
+  --paper-2: #f5ecd6;       /* papier un peu plus foncé */
+  --card: #fffdf7;          /* feuilles posées dessus */
+  --ink: #26241f;           /* texte principal */
+  --ink-2: #5b574d;         /* texte secondaire */
+  --ink-3: #8d877a;         /* légendes */
+  --rule: #3b2f8f;          /* filets, lignes fines (violet encre) */
+  --rule-soft: rgba(59, 47, 143, 0.22);
+
+  /* Accents (tirés des références) */
+  --olive: #7aa317;         /* grand titre */
+  --olive-ink: #5c7d0e;     /* olive lisible en petit */
+  --violet: #3b2f8f;
+  --terracotta: #ee5a24;
+  --terracotta-ink: #c8461a;
+
+  /* Couleurs de dossiers / notes (douces) */
+  --f-sky: #b8d6f2;
+  --f-matcha: #c9d77a;
+  --f-ochre: #ecc35a;
+  --f-lilac: #ddd0ea;
+  --f-terracotta: #f0743f;
+  --f-peach: #f9d2b4;
+  --f-blush: #f2c9c0;
+  --f-sage: #e3edd0;
+  --f-teal: #5ea9ba;
+
+  /* Damier pastel */
+  --c1: #f4a8bd; --c2: #fbcb9f; --c3: #fbe7b5; --c4: #bcd4ee; --c5: #c8cb92; --c6: #e9e6df; --c7: #fffaf0;
+
+  /* Typo */
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-body: "Instrument Sans Variable", "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-hand: "Gaegu", "Comic Neue", cursive;
+
+  --t-xs: 0.74rem;
+  --t-s: 0.86rem;
+  --t-m: clamp(1rem, 0.97rem + 0.15vw, 1.08rem);
+  --t-l: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
+  --t-xl: clamp(2.2rem, 1.6rem + 2.6vw, 3.8rem);
+  --t-xxl: clamp(3.8rem, 1.6rem + 7.4vw, 8.4rem);
+
+  /* Mouvement : sobre */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --fast: 200ms;
+  --mid: 500ms;
+  --slow: 900ms;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1160px;
+}
+
+/* ---------------------------------------------------------
+   Thème nuit : prêt, désactivé. Activer avec data-theme="nuit"
+   sur <html> (et un bouton pour basculer).
+   ---------------------------------------------------------
+:root[data-theme="nuit"] {
+  color-scheme: dark;
+  --paper: #191a24;  --paper-2: #20212e;  --card: #262838;
+  --ink: #f2ead8;    --ink-2: #c4bdaa;    --ink-3: #8f8a7c;
+  --rule: #b9b0ff;   --rule-soft: rgba(185, 176, 255, 0.25);
+  --olive: #b5d65a;  --olive-ink: #c7e276;
+  --violet: #b9b0ff; --terracotta: #ff8a5c; --terracotta-ink: #ff9d76;
+  --f-sky: #3c5a78; --f-matcha: #5d6a2a; --f-ochre: #8a6d1f; --f-lilac: #4f4466;
+  --f-terracotta: #a3441c; --f-peach: #7a5440; --f-blush: #6d4a46; --f-sage: #3d4a33; --f-teal: #2f6b78;
+  --c1: #6b3f4c; --c2: #6e5032; --c3: #6a5d36; --c4: #3c5068; --c5: #4f5233; --c6: #2c2d3a; --c7: #232431;
+}
+*/

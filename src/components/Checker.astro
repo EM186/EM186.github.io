@@ -1,0 +1,17 @@
+---
+/**
+ * Damier pastel (inspiré des carreaux de céramique).
+ * Couleurs pseudo-aléatoires mais stables d'un build à l'autre.
+ * Quelques carreaux changent doucement de couleur (motion.ts).
+ */
+interface Props { cols?: number; rows?: number; seed?: number; class?: string }
+const { cols = 72, rows = 3, seed = 3, class: cls = '' } = Astro.props;
+let s = seed;
+const rand = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+// la crème domine, les couleurs restent ponctuelles
+const palette = ['--c7', '--c7', '--c7', '--c6', '--c6', '--c3', '--c2', '--c4', '--c1', '--c5', '--c3', '--c4'];
+const cells = Array.from({ length: cols * rows }, () => palette[Math.floor(rand() * palette.length)]);
+---
+<div class:list={['checker', cls]} style={`--cols:${cols}`} aria-hidden="true" data-checker>
+  {cells.map((c) => <span style={`background:var(${c})`}></span>)}
+</div>

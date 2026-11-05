@@ -1,0 +1,62 @@
+---
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
+import '@fontsource-variable/instrument-sans';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource/gaegu/latin-400.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  home?: boolean;
+  image?: string;
+}
+const { title, description, home = true, image = '/og.png' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="fr" data-theme="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#fbf5e6" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Langues alternatives, à activer avec les traductions :
+    <link rel="alternate" hreflang="en" href="https://emmazh.fr/en/" />
+    <link rel="alternate" hreflang="zh" href="https://emmazh.fr/zh/" />
+    -->
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Aller au contenu</a>
+
+
+    <Header home={home} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>

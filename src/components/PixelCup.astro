@@ -1,0 +1,59 @@
+---
+/**
+ * Tasse de thé matcha en pixel art (dessin original), avec vapeur animée.
+ * Chaque caractère de la grille = un pixel. "." = transparent.
+ */
+interface Props { class?: string; px?: number }
+const { class: cls = '', px = 10 } = Astro.props;
+
+const grid = [
+  '..................',
+  '..................',
+  '..................',
+  '..oooooooooooo....',
+  '.oTTTTTTTTTTTTo...',
+  '.otttttttttttto...',
+  '.owwwwwwwwwwhwoooo',
+  '.owwwwwwwwwwhwo..o',
+  '.owwwpwpwwwwhwo..o',
+  '.owwwppppwwwhwo..o',
+  '.owwwwppwwwwhwo.oo',
+  '.owwwwwwwwwwhwooo.',
+  '..owwwwwwwwhwo....',
+  '...owwwwwwwwo.....',
+  '.oooooooooooooooo.',
+  'oSSSSSSSSSSSSSSSSo',
+  '.oooooooooooooooo.',
+];
+const colors: Record<string, string> = {
+  o: '#7a7468', // contour gris-brun
+  T: '#d7ecb3', // reflet du thé
+  t: '#9fcf7c', // thé matcha
+  w: '#fffaf0', // porcelaine
+  h: '#e8e1d0', // ombre de la porcelaine
+  p: '#f4a8bd', // petit motif rose
+  S: '#bcd4ee', // soucoupe
+};
+const rects: { x: number; y: number; c: string }[] = [];
+grid.forEach((row, y) => [...row].forEach((ch, x) => { if (colors[ch]) rects.push({ x, y, c: colors[ch] }); }));
+const W = grid[0].length, H = grid.length;
+
+// vapeur : 3 colonnes de pixels qui montent en boucle
+const steam = [
+  { x: 4, d: 0 }, { x: 7, d: 0.6 }, { x: 10, d: 1.2 },
+];
+---
+<svg class:list={['pixcup', cls]} viewBox={`0 -6 ${W} ${H + 6}`} width={W * px} height={(H + 6) * px}
+  shape-rendering="crispEdges" role="img" aria-label="Tasse de thé matcha en pixel art">
+  {rects.map((r) => <rect x={r.x} y={r.y} width="1" height="1" fill={r.c} />)}
+  <g class="pixcup__steam">
+    {steam.map((s) => (
+      <g style={`animation-delay:${s.d}s`}>
+        <rect x={s.x} y="1" width="1" height="1" fill="#cfc8b8" />
+        <rect x={s.x + 1} y="0" width="1" height="1" fill="#cfc8b8" />
+        <rect x={s.x} y="-1" width="1" height="1" fill="#ddd7c9" />
+        <rect x={s.x - 1} y="-2" width="1" height="1" fill="#e6e1d4" />
+      </g>
+    ))}
+  </g>
+</svg>

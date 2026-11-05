@@ -1,0 +1,317 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PixelCup from '../components/PixelCup.astro';
+import Checker from '../components/Checker.astro';
+import Doodle from '../components/Doodle.astro';
+import {
+  profile, search, experiences, projects, archives, writings, skillsStory, direction,
+  skills, softSkills, education, languages, certifications, hobbies,
+} from '../data/fr';
+
+// [texte|couleur] -> pastille, {texte} -> italique
+function story(src: string) {
+  return src
+    .replace(/\[([^|\]]+)\|([a-z]+)\]/g, '<span class="pill" style="--p:var(--f-$2)">$1</span>')
+    .replace(/\{([^}]+)\}/g, '<em>$1</em>');
+}
+const folderColor: Record<string, string> = {
+  sky: 'var(--f-sky)', mint: 'var(--f-matcha)', butter: 'var(--f-ochre)', lilac: 'var(--f-lilac)', rose: 'var(--f-terracotta)',
+};
+const noteColor: Record<string, string> = {
+  rose: 'var(--f-blush)', butter: 'var(--f-ochre)', mint: 'var(--f-sage)', sky: 'var(--f-sky)', lilac: 'var(--f-lilac)',
+};
+const lvl = { solide: '●', pratique: '◐', notions: '○' } as const;
+---
+<Base
+  title="Emma Zhao · Étudiante ingénieure Informatique & Cybersécurité"
+  description="Portfolio d'Emma Zhao, étudiante ingénieure Informatique & Cybersécurité à CPE Lyon. Recherche une alternance dès septembre 2027 et un stage à l'étranger de juin à août 2027."
+>
+  <!-- ================= INTRO ================= -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <p class="mono hero__eyebrow">Portfolio · {profile.role} · {profile.school}</p>
+
+    <div class="hero__grid">
+      <h1 id="hero-title" class="hero__title">
+        <span class="line"><span>J’aime <em>construire</em></span></span>
+        <span class="line"><span>des choses</span></span>
+        <span class="line"><span>qui tiennent.</span></span>
+      </h1>
+
+      <div class="hero__art">
+        <PixelCup px={11} />
+        <p class="hand hero__annot">
+          <span>matcha, carburant<br />officiel du code</span>
+          <Doodle name="arrow" size={44} />
+        </p>
+      </div>
+    </div>
+
+    <div class="hero__bottom">
+      <p class="mono hero__intro">
+        Moi c’est <strong>Emma Zhao</strong>. {profile.intro}
+      </p>
+      <div class="hero__ctas">
+        <a class="btn btn--fill" href={profile.cv} download><Icon name="download" size={16} />Télécharger mon CV</a>
+        <a class="btn" href="#projets">Voir les projets<span class="plus">+</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NOTES : CE QUE JE CHERCHE ================= -->
+  <section class="notes wrap" id="recherche" aria-label="Ce que je cherche">
+    <article class="note note--card" data-reveal style="--r:-5deg">
+      <span class="note__holes" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <p class="mono note__k">{search.alternance.label} · {search.alternance.when}</p>
+      <p class="note__big">{search.alternance.sentence}</p>
+    </article>
+
+    <article class="note note--fold" data-reveal style="--r:3deg">
+      <p class="mono note__k">{search.stage.label} · {search.stage.when}</p>
+      <p class="mono note__txt">
+        Et un stage de 3 mois à l’étranger&nbsp;: {search.stage.where}.
+      </p>
+    </article>
+
+    <div class="note note--square note--matcha" data-reveal style="--r:6deg" aria-hidden="true">
+      <span class="note__han">赵</span>
+    </div>
+
+    <div class="note note--square note--blue" data-reveal style="--r:-7deg">
+      <pre class="ascii" aria-label="une tasse en caractères ASCII">  ( (
+   ) )
+ .______.
+ |      |]
+ \      /
+  `----'</pre>
+    </div>
+
+    <p class="note note--tag mono" data-reveal style="--r:-2deg">
+      <Icon name="pin" size={15} /> Basée à Lyon · rythme 1 semaine / 1 semaine
+    </p>
+  </section>
+
+  <Checker cols={72} rows={2} seed={5} />
+
+  <!-- ================= EXPÉRIENCES ================= -->
+  <section class="section wrap" id="experiences" aria-labelledby="xp-title">
+    <header class="shead" data-reveal>
+      <span class="mono shead__n">01</span>
+      <h2 id="xp-title" class="shead__t">Expériences</h2>
+      <span class="mono shead__aside">en entreprise · {experiences.length} stages</span>
+    </header>
+
+    <div class="xp">
+      {experiences.map((e, i) => (
+        <details class="xp__row" open={i === 0} data-reveal>
+          <summary>
+            <span class="mono xp__date">{e.dates}<br /><span>{e.duration}</span></span>
+            <span class="xp__head">
+              <span class="xp__title">{e.title}</span>
+              <span class="xp__company">{e.company} · {e.place}</span>
+            </span>
+            <span class="xp__toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="xp__body">
+            <p class="xp__summary">{e.summary}</p>
+            {e.points.length > 0 && (
+              <ol class="xp__points">
+                {e.points.map((p, j) => (
+                  <li>
+                    <span class="mono xp__pn">{String(j + 1).padStart(2, '0')}</span>
+                    <h3>{p.title}</h3>
+                    <p>{p.text}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+            {e.stack.length > 0 && <p class="mono xp__stack">{e.stack.join(' / ')}</p>}
+            {e.note && <p class="hand xp__note">{e.note}</p>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ================= PROJETS : DOSSIERS ================= -->
+  <section class="section wrap" id="projets" aria-labelledby="projects-title">
+    <header class="shead" data-reveal>
+      <span class="mono shead__n">02</span>
+      <h2 id="projects-title" class="shead__t">Projets</h2>
+      <span class="mono shead__aside">ouvrir un dossier pour le détail</span>
+    </header>
+
+    <ul class="folders">
+      {projects.map((p, i) => (
+        <li data-reveal style={`--d:${i * 70}ms`}>
+          <a class="folder" href={`/projets/${p.slug}/`} style={`--f:${folderColor[p.tone]}`}>
+            <svg class="folder__back" viewBox="0 0 300 210" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M1 26 V8 Q1 1 8 1 H118 Q123 1 126 5 L140 22 Q143 26 148 26 H292 Q299 26 299 33 V203 Q299 209 292 209 H8 Q1 209 1 203 Z" />
+            </svg>
+            <span class="folder__sheet" aria-hidden="true">
+              {p.cover
+                ? <img src={p.cover.src} alt="" loading="lazy" decoding="async" class:list={{ phone: p.cover.phone }} />
+                : <span class="mono">captures à venir</span>}
+            </span>
+            <span class="folder__front">
+              <span class="folder__box" aria-hidden="true"></span>
+              <span class="folder__title">{p.title}</span>
+              <span class="folder__kind">{p.kind}</span>
+              <span class="folder__foot mono">
+                <span>{p.frame.split(' · ')[0]} · {p.year}</span>
+                <Icon name="arrow" size={18} />
+              </span>
+            </span>
+          </a>
+          <ul class="folder__links mono">
+            {p.github && <li><a class="tlink" href={p.github} target="_blank" rel="noopener"><Icon name="github" size={14} />code</a></li>}
+            {p.docs.map((d) => <li><a class="tlink" href={d.href} download><Icon name="file" size={14} />doc {d.lang}</a></li>)}
+          </ul>
+        </li>
+      ))}
+
+      <li data-reveal style={`--d:${projects.length * 70}ms`}>
+        <div class="folder folder--static" style="--f:var(--f-peach)">
+          <svg class="folder__back" viewBox="0 0 300 210" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M1 26 V8 Q1 1 8 1 H118 Q123 1 126 5 L140 22 Q143 26 148 26 H292 Q299 26 299 33 V203 Q299 209 292 209 H8 Q1 209 1 203 Z" />
+          </svg>
+          <span class="folder__front">
+            <span class="folder__box" aria-hidden="true"></span>
+            <span class="folder__title">Archives & veille</span>
+            <span class="folder__list">
+              {archives.map((a) => <span><strong>{a.title}</strong> ({a.year}) · premier projet PHP</span>)}
+              {writings.map((w) => <a class="tlink" href={w.href} download>{w.title} (PDF)</a>)}
+            </span>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ================= COMPÉTENCES ================= -->
+  <section class="section wrap" id="competences" aria-labelledby="skills-title">
+    <header class="shead" data-reveal>
+      <span class="mono shead__n">03</span>
+      <h2 id="skills-title" class="shead__t">Compétences</h2>
+      <span class="mono shead__aside">en quelques phrases</span>
+    </header>
+
+    <div class="skills">
+      <div class="story">
+        {skillsStory.map((s) => <p data-reveal set:html={story(s)} />)}
+      </div>
+
+      <figure class="flow" data-reveal aria-label="Mon projet : relier développement, réseau et sécurité">
+        <figcaption class="mono">( le projet )</figcaption>
+        <div class="flow__row">
+          {direction.inputs.map((x, i) => (
+            <>
+              <span class="pill pill--lg" style={`--p:var(${['--f-ochre', '--f-sky', '--f-terracotta'][i]})`}>{x}</span>
+              {i < direction.inputs.length - 1 && <span class="flow__plus">+</span>}
+            </>
+          ))}
+        </div>
+        <span class="flow__line" aria-hidden="true"></span>
+        <span class="pill pill--lg pill--wide" style="--p:var(--f-matcha)">{direction.middle}</span>
+        <span class="flow__line" aria-hidden="true"></span>
+        <span class="pill pill--xl" style="--p:var(--f-blush)">{direction.goal}</span>
+        <p class="hand flow__note">{direction.note}</p>
+      </figure>
+    </div>
+
+    <details class="all-skills" data-reveal>
+      <summary><span class="mono">Voir la liste détaillée</span><span class="plus" aria-hidden="true">+</span></summary>
+      <p class="mono all-skills__legend">● à l’aise &nbsp; ◐ utilisé en projet &nbsp; ○ notions</p>
+      <div class="all-skills__grid">
+        {skills.map((g) => (
+          <section>
+            <h3 class="mono">{g.title}</h3>
+            <ul>
+              {g.items.map((it) => (
+                <li>
+                  <span class="lvl" title={it.level}>{lvl[it.level ?? 'pratique']}</span>
+                  <span>{it.name}{it.where && <small> · {it.where}</small>}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </details>
+
+    <h3 class="subhead" data-reveal>Et côté humain</h3>
+    <ul class="softs">
+      {softSkills.map((s, i) => (
+        <li class="soft" data-reveal style={`--r:${[-2, 1.5, -1, 2, -1.5][i % 5]}deg;--n:${noteColor[s.tone]};--d:${i * 60}ms`}>
+          <span class="mono soft__n">{String(i + 1).padStart(2, '0')}</span>
+          <h4>{s.name}</h4>
+          <p>{s.proof}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ================= PARCOURS ================= -->
+  <section class="section wrap" id="parcours" aria-labelledby="path-title">
+    <header class="shead" data-reveal>
+      <span class="mono shead__n">04</span>
+      <h2 id="path-title" class="shead__t">Formation & langues</h2>
+      <span class="mono shead__aside">2021 → 2029</span>
+    </header>
+
+    <div class="path">
+      <ol class="edu">
+        {education.map((e) => (
+          <li class:list={{ 'is-now': e.current }} data-reveal>
+            <span class="mono edu__d">{e.dates}{e.current && <em> · en cours</em>}</span>
+            <div>
+              <h3>{e.title}</h3>
+              <p class="edu__s">{e.school}</p>
+              {e.text && <p class="edu__t">{e.text}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div class="path__side">
+        <ul class="langs-list">
+          {languages.map((l) => (
+            <li data-reveal>
+              <span class="langs-list__hello" lang={l.hello === '你好' ? 'zh' : undefined}>{l.hello}</span>
+              <span class="mono langs-list__lvl">{l.name}<br />{l.level}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="certs" data-reveal>
+          <p class="mono certs__k">certifications</p>
+          <ul>{certifications.map((c) => <li><span>{c.name}</span><span class="mono">{c.by}</span></li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= À CÔTÉ ================= -->
+  <section class="section wrap" id="a-cote" aria-labelledby="side-title">
+    <header class="shead" data-reveal>
+      <span class="mono shead__n">05</span>
+      <h2 id="side-title" class="shead__t">À côté</h2>
+      <span class="mono shead__aside">hors écran</span>
+    </header>
+
+    <div class="sketch">
+      <div class="sketch__center" data-reveal>
+        <p class="sketch__lead">Quand je ne code pas…</p>
+        <!-- Placeholder : remplacer par une de tes illustrations (public/images/hobbies/) -->
+        <div class="sketch__ph"><Icon name="image" size={24} /><span class="mono">un de mes dessins<br />(à venir)</span></div>
+      </div>
+      {hobbies.map((h, i) => (
+        <div class:list={['sketch__item', `sketch__item--${i}`]} data-reveal style={`--d:${i * 90}ms`}>
+          {h.img
+            ? <img src={h.img} alt={h.name} loading="lazy" class="sketch__img" />
+            : <Doodle name={h.doodle as any} size={70} />}
+          <p class="hand"><strong>{h.name}</strong><br />{h.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

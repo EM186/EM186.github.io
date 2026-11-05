@@ -1,0 +1,47 @@
+---
+import Icon from './Icon.astro';
+import { t, languages } from '../i18n/ui';
+import { profile } from '../data/fr';
+
+interface Props { home?: boolean }
+const { home = true } = Astro.props;
+const base = home ? '' : '/';
+const links = [
+  { href: `${base}#experiences`, label: t('nav.xp') },
+  { href: `${base}#projets`, label: t('nav.projects') },
+  { href: `${base}#competences`, label: t('nav.skills') },
+  { href: `${base}#contact`, label: t('nav.contact') },
+];
+---
+<header class="topbar" data-topbar>
+  <a class="wordmark" href="/" aria-label="Emma Zhao, accueil">
+    <span class="wordmark__plus" aria-hidden="true">+</span><em>Emma Zhao</em>
+  </a>
+
+  <nav class="topnav" id="topnav" aria-label="Navigation principale" data-open="false">
+    <ul>
+      {links.map((l) => (
+        <li><a class="topnav__link" href={l.href}>{l.label}<span class="plus" aria-hidden="true">+</span></a></li>
+      ))}
+      <li><a class="topnav__link topnav__cv" href={profile.cv} download>CV<span class="plus" aria-hidden="true">↓</span></a></li>
+    </ul>
+
+    <!-- Langues : FR actif, EN et 中文 en attente de traduction -->
+    <div class="langs" role="group" aria-label="Langue">
+      {Object.entries(languages).map(([code, l]) =>
+        l.ready ? (
+          <a class="lang is-on" href="/" lang={code} aria-current="true">{l.label}</a>
+        ) : (
+          <span class="lang is-soon" lang={code}>
+            {l.label}<small>{code === 'zh' ? t('lang.coming') : t('lang.soon')}</small>
+          </span>
+        )
+      )}
+      {/* Version EN prête : remplacer le span par <a href="/en/" lang="en">EN</a> */}
+    </div>
+  </nav>
+
+  <button class="menu-btn" type="button" aria-controls="topnav" aria-expanded="false" data-menu>
+    <span class="menu-btn__label">Menu</span><span class="plus" aria-hidden="true">+</span>
+  </button>
+</header>
