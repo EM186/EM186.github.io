@@ -44,6 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     -->
 
     <script is:inline>document.documentElement.classList.add('js');</script>
+
   </head>
   <body>
     <a class="skip" href="#main">Aller au contenu</a>
@@ -58,5 +59,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <script>
       import '../scripts/motion.ts';
     </script>
+
+    <!-- Cloudflare Web Analytics sans cookie -->
+    <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "febe887dc55d426a8a004c735df7f387"}'></script>
   </body>
 </html>
